@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SVG, extend as SVGextend, Element as SVGElement } from '@svgdotjs/svg.js';
-import { random } from 'canvas-sketch-util'
+import { drawSaturn } from '../services/saturn.service';
 
 @Component({
   selector: 'app-svg-gen',
@@ -17,14 +17,6 @@ export class SvgGenComponent implements OnInit {
     1: [[75, 105]],
     2: [[30, 60], [120, 150]],
     3: [[50, 70], [80, 100], [110, 130]]
-  }
-
-  degreeToRadian(degree){
-    return degree * (Math.PI / 180);
-  }
-
-  randIntBetween(min, max) {
-    return Math.floor(Math.random() * (Math.floor(max) - Math.ceil(min)) + Math.floor(min));
   }
 
   generateRandomGrey(){
@@ -67,54 +59,6 @@ export class SvgGenComponent implements OnInit {
     this.drawLine(svg, startPoint.x, startPoint.y, 200);
   }
 
-  // TODO: clean this bad boy up.
-  drawPlanet(svg, centerX, centerY){
-    svg.attr({background: '#232323'});
-    /* *Deep sigh* Since SVG has no z axis everything is painted onto it like a painters' brush
-       Functionally this means that things must be drawn onto the canvas in the z order they
-       should appear. Meaning the planet in the middle of the rings must be drawn after the
-       rings behind it and before the rings in front of it. That's what the next 10ish lines
-       are for */
-    let lineSlope = this.canvas.height / this.canvas.width;
-    console.log(lineSlope);
-
-    let lengths = [];
-    for(let i = 0; i < 10; i += 1) lengths.push(this.randIntBetween(100, 225));
-
-    let rings = []
-    // TODO: actually solve the perspective issues here. At different degrees (literally not 45)
-    // the particles can end up on the wrong z level
-    lengths.forEach(l => {
-      for(let i = 0; i < 500; i += 1){
-        let d = this.randIntBetween(0,360);
-        let endX = (centerX + this.randIntBetween(-6, 6)) - Math.cos(this.degreeToRadian(d-25)) * l;
-        let endY = (centerY + this.randIntBetween(-6, 6)) - Math.sin(this.degreeToRadian(d+45)) * l;
-        // TODO: figure out why I can't push this as an object into the array.
-        // For now [0] is x and [1] is y
-        rings.push([endX, endY]);
-      }
-    })
-
-    let backRing = [];
-    let frontRing = [];
-    rings.forEach(particle => {
-      // This figures out if the ring particle is above or below the line of the perspective
-      particle[1] < lineSlope * particle[0] ? backRing.push(particle) : frontRing.push(particle);
-    })
-
-    backRing.forEach(p => {
-      let w = random.noise2D(p[0], p[1], 10, 10);
-      svg.circle(w).attr({ fill: this.generateRandomGrey(), cx: p[0], cy: p[1]});
-    });
-
-    svg.circle(150).attr({ cx: centerX, cy: centerY, fill: '#d46133'});
-
-    frontRing.forEach(p => {
-      let w = random.noise2D(p[0], p[1], 10, 10);
-      svg.circle(w).attr({ fill: this.generateRandomGrey(), cx: p[0], cy: p[1]});
-    });
-  }
-
   tripleNestedLoop(svg){
     let colors = {
       1: '#2034d6',
@@ -143,6 +87,6 @@ export class SvgGenComponent implements OnInit {
 
   ngOnInit(): void {
     let svg = SVG().addTo('#canvas').size(this.canvas.width, this.canvas.height);
-    this.tripleNestedLoop(svg);
+    drawSaturn(svg, this.canvas.width/2, this.canvas.height/2);
   }
 }
