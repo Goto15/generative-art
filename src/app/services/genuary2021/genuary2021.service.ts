@@ -22,9 +22,10 @@ export function mondrianShapes(svg){
   let canvasSize = { x: svg.width(), y: svg.height() };
   // TODO: these two should be derived or passed as an argument
   let border = 100;
-  let offset = 100;
+  let offset = 200;
   for(let i = border; i < canvasSize.x - border; i += offset) {
     for(let j = border; j < canvasSize.y - border; j += offset) {
+      // TODO: These are a little long and illegible. I should probably make this a little more readable
       if(randIntBetween(1, 3) === 1) {
         svg.circle(offset).attr({ cx: i+(offset/2), cy: j, fill: mondrianColors[randIntBetween(1, 6)]});
       } else {
