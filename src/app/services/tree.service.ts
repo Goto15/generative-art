@@ -16,13 +16,13 @@ export const branchAngles = {
 }
 
 export function drawTree(svg, startX, startY, length, rotation = 90, branchingFactor = 1, stroke = {color: '#d2691e', width: 10, linecap: 'round'}){
-    // Make sure the length of the line doesn't get too small and that all the branches stay in frame
+    /* Make sure the length of the line doesn't get too small and that all the branches stay in frame */
     // TODO: this get very slow and weird at larger canvas sizes. It needs some optimization
     // and prettification
     if(startY < 50 || /*startX < 50 || startX > 450 ||*/ length < 2) {
-      // Create the leaves of the tree
+      /* Create the leaves of the tree */
       for(let i = 0; i < 25; i += 1){
-        // Create random number within a circle
+        /* Create random number within a circle */
         let x = startX + (30 * (Math.sqrt(Math.random())) * Math.cos(randIntBetween(0, Math.PI)));
         let y = startY + (30 * (Math.sqrt(Math.random())) * Math.sin(randIntBetween(0, Math.PI)));
         let rotate = randIntBetween(0, 180);

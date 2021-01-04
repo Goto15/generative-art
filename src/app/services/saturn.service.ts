@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { degreeToRadian, randIntBetween } from './math-helpers.service';
 import { random } from 'canvas-sketch-util';
+import { randomGrey } from '../services/colors.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,21 +10,19 @@ export class SaturnService {
   constructor() { }
 }
 
-export function drawSaturn(svg, centerX, centerY){
+// TODO: Maybe clean up these parameters?
+export function drawSaturn(svg, centerX, centerY, diameter = 150, ringDiameter = Math.min(svg.width()/2, svg.height()/2), fill = '#000000'){
   /* *Deep sigh* Since SVG has no z axis everything is painted onto it like a painters'
       brush. Functionally this means that things must be drawn onto the canvas in the z
       order they should appear. Meaning the planet in the middle of the rings must be
       drawn after the rings behind it and before the rings in front of it. That's what
       the next 10ish lines are for */
-  let maxX = svg.width();
-  let maxY = svg.height();
   let lineSlope = svg.height() / svg.width();
 
   let lengths = [];
-  // TODO: This should be some offset between the radius of the planet and the edge of the
-  // canvas
-  for(let i = 0; i < 12; i += 1) {
-    lengths.push(randIntBetween(100, Math.min(maxX/2-100, maxY/2-100)));
+  // TODO: maybe accept the number of rings and starting distance to make
+  for(let i = 0; i < 25; i += 1) {
+    lengths.push(randIntBetween(diameter/2, ringDiameter));
   }
 
   /*  TODO: actually solve the perspective issues here. At different degrees (literally
@@ -55,19 +54,12 @@ export function drawSaturn(svg, centerX, centerY){
     svg.circle(width).attr({ cx: particle[0], cy: particle[1], fill: randomGrey() });
   });
 
-  //  Draw the actual planet
-  //  TODO: allow the planet to accept a diameter size and fill
-  svg.circle(150).attr({ cx: centerX, cy: centerY, fill: '#000000' });
+  /*  Draw the actual planet */
+  svg.circle(diameter).attr({ cx: centerX, cy: centerY, fill: fill });
 
+  /* Finally fill in the front rings */
   frontRing.forEach(particle => {
     let w = random.noise2D(particle[0], particle[1], 10, 10);
     svg.circle(w).attr({ cx: particle[0], cy: particle[1], fill: randomGrey() });
   })
-}
-
-//  TODO: Honestly needs to be in a color service
-export function randomGrey(){
-  let chars = '0123456789ABCDEF';
-  let grey = chars[randIntBetween(0, chars.length -1)] + chars[randIntBetween(0, chars.length -1)];
-  return '#' + grey + grey + grey;
 }

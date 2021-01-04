@@ -33,7 +33,7 @@ export function mondrianShapes(svg, rows = 2, columns = rows, border = 100){
 }
 
 /* Day 2 Rule 30: Basic cellular automata */
-export function rule30(svg, offset = 10, border = offset, fill = '#ffffff'){
+export function rule30(svg, offset = 10, border = 100, startingCells = 4, fill = '#ffffff'){
   let canvasSize = { x: svg.width(), y: svg.height() };
 
   /*  Since a circle's positioning is determined by their center coords, they need an offset
@@ -48,10 +48,18 @@ export function rule30(svg, offset = 10, border = offset, fill = '#ffffff'){
   grid = grid.map(column => column = new Array(canvasSize.y / offset).fill(false));
 
   /*  Create a few true cells to be filled in so it's more interesting than a single cell at
-      [0][0]. TODO: allow some number of starting columns to be passed in by an argument */
+      [0][0]. */
+  let chosenCells = [0];
   grid[0][0] = true;
-  grid[randIntBetween(1, grid.length)][0] = true;
-  grid[randIntBetween(grid.length / 2, grid.length)][0] = true;
+  for(let i = 0; i < startingCells; i += 1){
+    let rand = randIntBetween(1, grid.length);
+    if(chosenCells.indexOf(rand) === -1){
+      chosenCells.push(rand);
+      grid[rand][0] = true;
+    } else {
+      i -= 1;
+    }
+  }
 
   /*  We're using two iterators so we can keep track of where we are on the grid _and_
       where we are as coordinates on the SVG. We're also starting and ending at the border
