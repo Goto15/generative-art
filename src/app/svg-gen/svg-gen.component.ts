@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SVG, extend as SVGextend, Element as SVGElement } from '@svgdotjs/svg.js';
+import { rule30 } from '../services/genuary2021/genuary2021.service';
 
 @Component({
   selector: 'app-svg-gen',
@@ -14,5 +15,6 @@ export class SvgGenComponent implements OnInit {
 
   ngOnInit(): void {
     let svg = SVG().addTo('#canvas').size(this.canvas.width, this.canvas.height);
+    rule30(svg, 25, 100);
   }
 }

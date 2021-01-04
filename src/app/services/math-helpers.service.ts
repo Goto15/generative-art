@@ -8,7 +8,6 @@ export class MathHelpersService {
 }
 
 // The min value is inclusive the max value is not
-// TODO: make the max value inclusive
 export function randIntBetween(min, max) {
   return Math.floor(Math.random() * (Math.floor(max) - Math.ceil(min)) + Math.floor(min));
 }
