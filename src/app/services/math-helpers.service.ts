@@ -15,3 +15,7 @@ export function randIntBetween(min, max) {
 export function degreeToRadian(degree){
   return degree * (Math.PI / 180);
 }
+
+export function endFromPointAndDegree(x, y, degree, length){
+  return {x: x - Math.cos(degreeToRadian(degree)) * length, y: y - Math.sin(degreeToRadian(degree)) * length };
+}

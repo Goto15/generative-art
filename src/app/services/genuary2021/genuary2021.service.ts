@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { randIntBetween } from '../math-helpers.service';
+import { endFromPointAndDegree, randIntBetween } from '../math-helpers.service';
 
 import { mondrian, transparencies } from '../colors.service';
 
@@ -57,6 +57,7 @@ export function rule30(svg, offset = 10, border = 100, startingCells = 4, fill =
       chosenCells.push(rand);
       grid[rand][0] = true;
     } else {
+      /* Reset the random round */
       i -= 1;
     }
   }
@@ -91,5 +92,26 @@ export function rule30(svg, offset = 10, border = 100, startingCells = 4, fill =
         });
       }
     }
+  }
+}
+
+/* Day 4 Small areas of symmetry */
+export function diamondFlower(svg, petals = 4, size = 100, centerCoords = { x: svg.width()/2, y: svg.height()/2}){
+  let degreeRotation = 360/petals;
+  let halfRotation = degreeRotation/2;
+
+  /* As with everything in SVG order is important */
+  let points = [[centerCoords.x, centerCoords.y]]
+  let rightPoint = endFromPointAndDegree(centerCoords.x, centerCoords.y, degreeRotation + halfRotation, size);
+  let leftPoint = endFromPointAndDegree(centerCoords.x, centerCoords.y, degreeRotation - halfRotation, size);
+  points.push([rightPoint.x, rightPoint.y]);
+  points.push([centerCoords.x, centerCoords.y + size]);
+  points.push([leftPoint.x, leftPoint.y]);
+
+  let fillColor = '#ffffff';
+  for(let i = 0; i < petals; i += 1){
+    let anchorX = points[0][0];
+    let anchorY = points[0][1];
+    svg.polygon(points).fill(fillColor).rotate(degreeRotation * i, anchorX, anchorY);
   }
 }
