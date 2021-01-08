@@ -9,18 +9,21 @@ export class ColorsService {
 }
 
 export const calmCream = {
-  
+  0: '#fae9d7', // Cream
+  1: '#52597C', // Purple
+  2: '#9DB7A6', // Green
+  3: '#FADCD7'  // Pink
 }
 
 export const mondrian = {
-  1: '#2034d6', // Blue
-  2: '#f60201', // Red
-  3: '#fded01', // Yellow
-  4: '#ffffff', // White
-  5: '#000000'  // Black
+  0: '#2034d6', // Blue
+  1: '#f60201', // Red
+  2: '#fded01', // Yellow
+  3: '#ffffff', // White
+  4: '#000000'  // Black
 };
 
-/*  These are 2 digit hex code transparencies to be concatenated to 6 digit hex codes starting from
+/*  These are 2 digit hex code transparencies to be postpended to 6 digit hex codes starting from
     0% and incrementing by 5% up to 100% */
 export const transparencies = [
   '0d', '1a', '26', '33', '40',
@@ -30,7 +33,7 @@ export const transparencies = [
 ]
 
 export const trueBlue = {
-  1: '#0073cf'
+  0: '#0073cf'
 }
 
 export function randomGrey(){
