@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { endFromPointAndDegree, randIntBetween } from '../math-helpers.service';
+import { random } from 'canvas-sketch-util';
 
 import { mondrian, transparencies } from '../colors.service';
+import { calcPossibleSecurityContexts } from '@angular/compiler/src/template_parser/binding_parser';
 
 @Injectable({
   providedIn: 'root'
@@ -114,4 +116,44 @@ export function diamondFlower(svg, petals = 4, size = 100, centerCoords = { x: s
     let anchorY = points[0][1];
     svg.polygon(points).fill(fillColor).rotate(degreeRotation * i, anchorX, anchorY);
   }
+}
+
+/* Day 5 Code Golf Conway's Game of Life */
+function sumOfNeighbors(cells, coords, neighbors){
+  let sum = 0;
+  neighbors.forEach(n => sum += cells[coords.x + n.x][coords.y + n.y]);
+  return sum;
+}
+
+/* Genuary Day 5: Code Golf Conway's Game of Life */
+export function drawBoard(svg, cells, border = 100){
+  /* Create the 2D array of next generations' live cells */
+  let nextGen = Array.from({length: cells.length}, () => Array.from({length: cells[0].length}, () => 0));
+
+  /* The relative x and y positions of a cell's neighbors */
+  let neighborsArray = [{x: -1, y: -1}, {x: 0, y: -1}, {x: 1, y: -1},
+                        {x: -1, y: 0},                 {x: 1, y: 0},
+                        {x: -1, y: 1},  {x: 0, y: 1},  {x: 1, y: 1}];
+
+  /* Set the cells that are alive next generation */
+  for(let i = 1; i < cells.length - 1; i += 1){
+    for(let j = 1; j < cells[i].length - 1; j += 1){
+      let neighbors = sumOfNeighbors(cells, {x: i, y: j}, neighborsArray);
+      if(neighbors === 3 || (cells[i][j] === 1 && neighbors === 2)) {
+        nextGen[i][j] = 1;
+      } else {
+        nextGen[i][j] = 0;
+      }
+    }
+  }
+
+  /* Draw them bois */
+  for(let i = 0; i < nextGen.length; i += 1){
+    for(let j = 1; j < nextGen[0].length; j += 1){
+      let fill = nextGen[i][j] ? '#52597C': '#fae9d7';
+      svg.rect(10,10).attr({fill: fill, x: i*10, y: j*10 });
+    }
+  }
+
+  return nextGen;
 }

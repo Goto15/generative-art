@@ -8,6 +8,10 @@ export class ColorsService {
   constructor() { }
 }
 
+export const calmCream = {
+  
+}
+
 export const mondrian = {
   1: '#2034d6', // Blue
   2: '#f60201', // Red
