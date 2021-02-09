@@ -157,3 +157,25 @@ export function drawBoard(svg, cells, border = 100){
 
   return nextGen;
 }
+
+/* Day 7 Curves Only */
+export function curvesOnly(svg, border = 100){
+  let canvas = {x: svg.width(), y: svg.height()};
+  let start = {x: canvas.x*.5, y: canvas.y*.5}
+
+  for(let i = canvas.x - border; i > border; i -= 25){
+    let rand = randIntBetween(0, 3);
+    if(rand === 0){
+      svg.circle(i).fill('#52597C').attr({cx: start.x + i/25, cy: start.y});
+    } else if (rand === 1){
+      svg.circle(i).fill('#fae9d7').attr({cx: start.x - i/25, cy: start.y});
+    } else {
+      /* Create the rays from a starting point to the edge of the canvas */
+      let rays = 72;
+      for(let j = 0; j < rays; j += 1){
+        let end = endFromPointAndDegree(start.x, start.y, j*(360/rays), (canvas.x - (2 * border))/2);
+        svg.line(start.x, start.y, end.x, end.y).stroke({color: '#52597C', width: 1});
+      }
+    }
+  }
+}
